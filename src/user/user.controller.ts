@@ -15,7 +15,7 @@ export class UserController {
   }
 
   @Post('signup')
-  async signUp(@Body() userData: Partial<UserDetailsEntity>) {
+  async signUp(@Body() userData: UserDetails) {
     return this.userService.createUser(userData);
   }
   @Post('signin')
