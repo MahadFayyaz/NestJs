@@ -30,10 +30,12 @@ export class UserService {
       username,
       email,
       password: hashedPassword,
+      posts: [],
     });
     return await this.userRepository.save(user);
   }
 
+  
   async signIn(userData: { email: string; password: string }) {
     const { email, password } = userData;
     const user = await this.userRepository.findOne({ where: { email } });
