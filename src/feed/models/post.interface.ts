@@ -6,5 +6,4 @@ export interface FeedPost {
     body?:string;
     createdAt?:Date;
     createdBy?: UserDetailsEntity;
-
 }
