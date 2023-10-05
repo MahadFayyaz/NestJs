@@ -6,6 +6,7 @@ import { UserDetails } from './entities/user.interface';
 import { Observable, from } from 'rxjs';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt'; // Add this line
+import { CreateUserDto, LoginUserDto } from './dtos/user.dto';
 
 
 @Injectable()
@@ -20,7 +21,7 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  async createUser(userData: Partial<UserDetails>): Promise<UserDetails> {
+  async createUser(userData: CreateUserDto): Promise<UserDetails> {
     console.log("in create user");
     
     const { username, email, password } = userData;
@@ -40,7 +41,7 @@ export class UserService {
   }
 
   
-  async signIn(userData: { email: string; password: string }) {
+  async signIn(userData: LoginUserDto) {
     const { email, password } = userData;
     const   user = await this.userRepository.findOne({ where: { email } });
 

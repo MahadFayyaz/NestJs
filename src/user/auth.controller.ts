@@ -6,6 +6,7 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { Observable } from 'rxjs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { CreateUserDto, LoginUserDto } from './dtos/user.dto';
 
 
 @Controller('auth')
@@ -15,13 +16,13 @@ export class AuthController {
     private readonly userService: UserService) {}
 
   @Post('signup')
-  async signUp(@Body() userData: UserDetails) {
+  async signUp(@Body() userData: CreateUserDto) {
     console.log("in auth");
     
     return await this.userService.createUser(userData);
   }
   @Post('signin')
-  async signIn(@Body() userData: { email: string; password: string }) {
+  async signIn(@Body() userData: LoginUserDto) {
     const accessToken = await this.userService.signIn(userData);
   return { accessToken };
   }
