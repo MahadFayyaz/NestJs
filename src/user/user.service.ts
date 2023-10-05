@@ -7,6 +7,7 @@ import { Observable, from } from 'rxjs';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt'; // Add this line
 import { CreateUserDto, LoginUserDto } from './dtos/user.dto';
+import { MailService } from '../user/email/mail.service';
 
 
 @Injectable()
@@ -15,6 +16,7 @@ export class UserService {
     @InjectRepository(UserDetailsEntity)
     private userRepository: Repository<UserDetails>,
     private jwtService: JwtService,  
+    private readonly mailService: MailService,
   ) {}
 
   async getAllUsers(): Promise<UserDetails[]> {
@@ -37,7 +39,10 @@ export class UserService {
       password: hashedPassword,
       posts: [],
     });
-    return await this.userRepository.save(user);
+    const savedUser=await this.userRepository.save(user);
+    await this.mailService.sendWelcomeEmail(email);
+    return savedUser;
+    
   }
 
   

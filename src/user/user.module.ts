@@ -7,18 +7,26 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
-
-
-
-
+import { MailerModule } from '@nestjs-modules/mailer';
+import { SendGridTransport } from 'nodemailer-sendgrid-transport';
 @Module({
   imports:[
     TypeOrmModule.forFeature([UserDetailsEntity]),
     PassportModule,
     JwtModule.register({
-      global:true, // Add this block
-      secret: 'this is a jwt key', // Change this to a secret key
-      signOptions: { expiresIn: '1h' }, // Change the expiration time if needed
+      global:true,
+      secret: 'this is a jwt key',
+      signOptions: { expiresIn: '1h' },
+    }),
+    MailerModule.forRoot({
+      transport: SendGridTransport({
+        auth: {
+          api_key: 'SENDGRID_API_KEY',
+        },
+      }),
+      defaults: {
+        from: 'fayazmahad675@gmail.com',
+      },
     }),
   ],
   controllers: [UserController,AuthController],
