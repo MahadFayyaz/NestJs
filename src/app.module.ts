@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config/dist';
 import { FeedModule } from './feed/feed.module';
 import { UserModule } from './user/user.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from './user/user.module';
  }),
     FeedModule,
     UserModule,
+    MailerModule,
  ],
   controllers: [AppController],
   providers: [AppService],

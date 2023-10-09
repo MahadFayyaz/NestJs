@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 
 export class CreateUserDto {
@@ -27,3 +28,11 @@ export class LoginUserDto {
     password: string;
 
 }
+export class ForgotPasswordDto {
+    @ApiProperty({
+      example: '',
+    })
+    @IsEmail({}, { message: 'email must be a valid email' })
+    @IsNotEmpty({ message: 'email is required' })
+    email: string;
+  }

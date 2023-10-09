@@ -1,4 +1,4 @@
-import { Injectable,NotFoundException,UnauthorizedException,ConflictException,Global } from '@nestjs/common';
+import { Injectable,NotFoundException,UnauthorizedException,ConflictException,Global, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { UserDetailsEntity } from './entities/user.entity';
@@ -7,7 +7,7 @@ import { Observable, from } from 'rxjs';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt'; // Add this line
 import { CreateUserDto, LoginUserDto } from './dtos/user.dto';
-import { MailService } from '../user/email/mail.service';
+import { EmailService } from '../email/mail.service';
 
 
 @Injectable()
@@ -16,9 +16,9 @@ export class UserService {
     @InjectRepository(UserDetailsEntity)
     private userRepository: Repository<UserDetails>,
     private jwtService: JwtService,  
-    private readonly mailService: MailService,
+    private readonly mailService: EmailService,
   ) {}
-
+ 
   async getAllUsers(): Promise<UserDetails[]> {
     return await this.userRepository.find();
   }
@@ -40,9 +40,11 @@ export class UserService {
       posts: [],
     });
     const savedUser=await this.userRepository.save(user);
-    await this.mailService.sendWelcomeEmail(email);
+    console.log("hitted")
+    await this.mailService.sendResetPasswordOTP(email);
+    console.log("hitted2")
     return savedUser;
-    
+
   }
 
   
@@ -71,5 +73,21 @@ export class UserService {
   
   deleteUser(id:number):Observable<DeleteResult>{
     return from(this.userRepository.delete(id))
+  }
+
+
+  async sendPasswordResetEmail(email: string) {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException('user not found');
+    }
+
+    // const otp = this.generateOTP();
+
+    // //Save OTP in user entity.
+    // this.usersService.addOPT(email, otp);
+
+    // Send the password reset email
+    await this.mailService.sendResetPasswordOTP(email);
   }
 }
