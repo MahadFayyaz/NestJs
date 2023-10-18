@@ -18,31 +18,14 @@ export class PaymentController {
     const paymentIntent = await this.stripeService.createPaymentIntent(amount, currency);
     return { client_secret: paymentIntent.client_secret };
   }
-  // @Post('add-payment-method')
-  // setDefaultCard(@Body() body: CreateCardDto) {
-  //   const result = this.stripeService.createPaymentMethod(body);
-  //   return result;
-  // }
 
   @Post('/link-card')
   createCard(@Body() body: CardDto) {
     return this.stripeService.addCustomerCard(body);
   }
-
-  // @Post('/payment')
-  // createPayments(@Body() paymentRequestBody: CreatePayment) {
-  //   return this.stripeService.createPayment(paymentRequestBody);
-  // }
-
   @Post('/charge')
   charge(@Body() chargeBody: ChargePayment ) {
     return this.stripeService.charge(chargeBody);
   }
-
-  // @Post('subscribe')
-  // async subscribeToPlan(@Body() body: SubscriptionDto) {
-  //   let data = await this.stripeService.purchaseOneTimePlan(body);
-  //   return data;
-  // }
 
 }
