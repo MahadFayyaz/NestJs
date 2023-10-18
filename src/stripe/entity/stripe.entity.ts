@@ -1,26 +1,19 @@
-// import Model from '@/common/entities/Model.entity';
-// import { Users } from '@/users/entities/user.entity';
-// import { Column, Entity, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-// @Entity('userSubscription')
-// export class UserSubscription extends Model {
-//   @Column({ type: 'varchar', length: 100 })
-//   plan: string;
+@Entity('TRANSACTIONS') // Specify the table name
+export class Transaction {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-//   @Column({ type: 'date' })
-//   startDate: Date;
+  @Column()
+  UserIDfrom: string;
 
-//   @Column({ type: 'date' })
-//   expiryDate: Date;
+  @Column({ nullable: true })
+  amount: number;
 
-//   @Column({ default: 0 })
-//   totalUserDefinedQuestion: number;
+  @Column()
+  chargeID: string;
 
-//   @Column({ default: 0 })
-//   consumeUserDefinedQuestion: number;
-
-//   @ManyToOne(() => Users, (user) => user.subscriptions, {
-//     onDelete: 'CASCADE',
-//   })
-//   author: Users;
-// }
+  @Column({ nullable: true })
+  invoiceNumber: string;
+}

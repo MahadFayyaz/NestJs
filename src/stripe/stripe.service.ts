@@ -9,11 +9,16 @@ import {
   CreateStripeDto,
   SubscriptionDto,
 } from './dtos/stripe.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Transaction } from './entity/stripe.entity';
+import { Repository } from 'typeorm';
 @Injectable()
 export class StripeService {
   private stripe: Stripe;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(private readonly configService: ConfigService, 
+    @InjectRepository(Transaction)
+  private readonly transactionRepository: Repository<Transaction>,) {
     this.stripe = new Stripe(configService.get('STRIPE_SECRET_KEY'), {
       apiVersion: '2023-08-16', // Use the latest version available
     });
@@ -102,5 +107,16 @@ export class StripeService {
       description:
         'My First Test Charge (created for API docs at https://www.stripe.com/docs/api)',
     });
+
+    const transactionData = {
+      UserIDfrom: charges.customerID,
+      amount: charges.amount,
+      chargeID: charge.id,
+      // invoiceNumber: charge.invoiceNumber,
+    };
+  
+    const transaction = this.transactionRepository.create(transactionData);
+    await this.transactionRepository.save(transaction);
+    return charge;
   }
 }
