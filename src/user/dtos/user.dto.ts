@@ -26,12 +26,12 @@ export class LoginUserDto {
     @IsNotEmpty()
     @MinLength(3)
     password: string;
-
 }
 export class ForgotPasswordDto {
     @ApiProperty({
       example: '',
     })
+    
     @IsEmail({}, { message: 'email must be a valid email' })
     @IsNotEmpty({ message: 'email is required' })
     email: string;

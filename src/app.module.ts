@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config/dist';
 import { FeedModule } from './feed/feed.module';
 import { UserModule } from './user/user.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -28,6 +29,9 @@ import { MailerModule } from '@nestjs-modules/mailer';
     FeedModule,
     UserModule,
     MailerModule,
+    
+    StripeModule,
+    
  ],
   controllers: [AppController],
   providers: [AppService],

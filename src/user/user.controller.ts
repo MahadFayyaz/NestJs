@@ -17,6 +17,7 @@ export class UserController {
     private readonly userService: UserService) {}
 
   @Get('/all')
+  
   async getAllUsers(): Promise<UserDetails[]> {
     return this.userService.getAllUsers();
   }
