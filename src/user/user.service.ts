@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt'; // Add this line
 import { CreateUserDto, LoginUserDto } from './dtos/user.dto';
 import { EmailService } from '../email/mail.service';
+import { StripeService } from 'src/stripe/stripe.service';
 
 
 @Injectable()
@@ -17,6 +18,7 @@ export class UserService {
     private userRepository: Repository<UserDetails>,
     private jwtService: JwtService,  
     private readonly mailService: EmailService,
+    private readonly stripeService: StripeService,
   ) {}
  
   async getAllUsers(): Promise<UserDetails[]> {
@@ -33,16 +35,31 @@ export class UserService {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
 
+
     const user = this.userRepository.create({
       username,
       email,
       password: hashedPassword,
       posts: [],
     });
-    const savedUser=await this.userRepository.save(user);
-    console.log("hitted")
-    await this.mailService.sendResetPasswordOTP(email);
-    console.log("hitted2")
+    const name = username;
+    const savedUser = await this.userRepository.save(user);
+    try {
+      const stripeCustomer = await this.stripeService.createCustomer({name,email});
+      console.log("Stripe Customer created:", stripeCustomer);
+
+      // Update the user with the customerID
+      savedUser.customerID = stripeCustomer.id;
+      await this.userRepository.save(savedUser);
+
+    } catch (error) {
+      console.error("Error creating Stripe Customer:", error);
+      // Handle error appropriately (e.g., throw a specific exception, log it, etc.)
+    }
+
+     
+    // await this.mailService.sendResetPasswordOTP(email);
+    // console.log("hitted2")
     return savedUser;
 
   }

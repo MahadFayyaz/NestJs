@@ -39,6 +39,19 @@ export class CardDto {
   @IsNotEmpty({ message: 'card token is required' })
   @IsString()
   cardToken: string;
+
+  @ApiProperty({
+    example: '',
+  })
+  @IsNotEmpty({ message: 'card token is required' })
+  @IsString()
+  amount: number;
+  @ApiProperty({
+    example: '',
+  })
+  @IsNotEmpty({ message: 'card token is required' })
+  @IsString()
+  currency: string;
 }
 // Customer subscription dto
 export class SubscriptionDto {
@@ -188,11 +201,12 @@ export class ChargePayment {
   })
   @IsString()
   currency: string;
-
+  @ApiProperty({
+    example: '',
+  })
+  @IsNotEmpty()
+  userId: number;
 }
-
-
-
 export class Charges {
   @ApiProperty({
     example: '',
@@ -213,6 +227,9 @@ export class Charges {
   @IsString()
   @IsNotEmpty({ message: 'token is required' })
   customerID: string;
+
+  // @IsNotEmpty({ message: 'token is required' })
+  // userId: number;
 }
 
 export class CreatePaymentIntentDto {

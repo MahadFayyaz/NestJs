@@ -8,7 +8,7 @@ export class  UserDetailsEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   username: string;
 
   @Column()
@@ -19,6 +19,9 @@ export class  UserDetailsEntity {
  
   @Column({ nullable: true })
   age: number;
+ 
+  @Column({ nullable: true })
+  customerID: string;
  
   @OneToMany(() => FeedPostEntity, post => post.createdBy) // One user can have many posts
   posts: FeedPostEntity[];

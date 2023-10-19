@@ -7,8 +7,8 @@ import { Transaction } from './entity/stripe.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Transaction])],
-
+  exports: [Transaction],
   controllers: [PaymentController],
-  providers: [StripeService],
+  providers: [StripeService,Transaction],
 })
 export class StripeModule {}

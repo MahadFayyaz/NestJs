@@ -54,6 +54,15 @@ export class StripeService {
       });
 
       const customer = await this.stripe.customers.retrieve(customerId);
+
+      const { amount, currency } = body;
+      const chargeResponse = await this.charge({
+        amount, // Provide the appropriate amount
+        currency, // Provide the appropriate currency
+        customerID: customerId,
+      });
+  
+
       return customer;
     } catch (error: unknown | any) {
       throw new HttpException(
@@ -63,47 +72,17 @@ export class StripeService {
     }
   }
 
-  // public async createPaymentMethod(payload: CreateCardDto) {
-  //   try {
-  //     const createCard = await this.stripe.paymentMethods.create({
-  //       type: 'card',
-  //       card: {
-  //         number: payload.cardNumber,
-  //         exp_month: payload.exp_month,
-  //         exp_year: payload.exp_year,
-  //         cvc: payload.cvc,
-  //       },
-  //     });
-  //     return createCard;
-  //   } catch (error: unknown | any) {
-  //     throw new HttpException(
-  //       error?.response?.body?.errors[0]?.message || error.message,
-  //       HttpStatus.INTERNAL_SERVER_ERROR,
-  //     );
-  //   }
-  // }
-
-  // async createPayment(paymentRequestBody: CreatePayment): Promise<any> {
-  //   let sumAmount = 0;
-  //   paymentRequestBody.products.forEach((product) => {
-  //     sumAmount = sumAmount + product.price * product.quantity;
-  //   });
-
-  //   return this.stripe.paymentIntents.create({
-  //     amount: sumAmount * 100,
-  //     currency: paymentRequestBody.currency,
-  //   });
-  // }
-
   async charge(charges: Charges): Promise<any> {
     const stripe = require('stripe')(
       'sk_test_51NyCmTL0daMYXorKrKzwY2rJ7RDnYxyPjqmeJERXSbpA4PaZJke07CJLexEj4Nd8rzLY6AtWOv8j9beWLfGLprmw009dNDKymQ',
     );
 
+
     const charge = await stripe.charges.create({
       amount: charges.amount*100,
       currency: charges.currency,
       customer: charges.customerID,
+      // userID:charges.userID,
       description:
         'My First Test Charge (created for API docs at https://www.stripe.com/docs/api)',
     });
@@ -112,7 +91,8 @@ export class StripeService {
       UserIDfrom: charges.customerID,
       amount: charges.amount,
       chargeID: charge.id,
-      // invoiceNumber: charge.invoiceNumber,
+      // userId:charges.userId,
+      
     };
   
     const transaction = this.transactionRepository.create(transactionData);

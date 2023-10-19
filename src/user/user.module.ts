@@ -10,11 +10,13 @@ import { AuthController } from './auth.controller';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EmailService } from '../email/mail.service';
 import { EmailController } from '../email/mail.controller';
+import { StripeService } from 'src/stripe/stripe.service';
+import { Transaction } from 'src/stripe/entity/stripe.entity';
 // import { SendGridTransport } from 'nodemailer-sendgrid-transport';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserDetailsEntity]),
+    TypeOrmModule.forFeature([UserDetailsEntity,Transaction]),
     PassportModule,
     JwtModule.register({
       global: true,
@@ -39,7 +41,7 @@ import { EmailController } from '../email/mail.controller';
   ],
 
   controllers: [UserController, AuthController,EmailController],
-  providers: [UserService, JwtStrategy,EmailService],
+  providers: [UserService, JwtStrategy,EmailService,StripeService],
   exports: [JwtModule],
 })
 export class UserModule {}
